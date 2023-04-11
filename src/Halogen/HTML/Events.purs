@@ -2,39 +2,43 @@ module Halogen.HTML.Events
   ( handler
   , handler'
   , onAbort
-  , onError
-  , onLoad
-  , onScroll
+  , onAuxClick
+  , onBeforeInput
+  , onBlur
   , onChange
+  , onChecked
+  , onClick
+  , onCopy
+  , onCut
+  , onDoubleClick
+  , onDrag
+  , onDragEnd
+  , onDragEnter
+  , onDragExit
+  , onDragLeave
+  , onDragOver
+  , onDragStart
+  , onDrop
+  , onError
   , onFileUpload
+  , onFocus
+  , onFocusIn
+  , onFocusOut
+  , onGotPointerCapture
   , onInput
   , onInvalid
-  , onReset
-  , onSelect
-  , onSubmit
-  , onTransitionEnd
-  , onCopy
-  , onPaste
-  , onCut
-  , onAuxClick
-  , onClick
-  -- , onContextMenu
-  , onDoubleClick
+  , onKeyDown
+  , onKeyUp
+  , onLoad
+  , onLostPointerCapture
   , onMouseDown
   , onMouseEnter
   , onMouseLeave
   , onMouseMove
-  , onMouseOver
   , onMouseOut
+  , onMouseOver
   , onMouseUp
-  , onWheel
-  , onKeyDown
-  -- , onKeyPress
-  , onKeyUp
-  , onBlur
-  , onFocus
-  , onFocusIn
-  , onFocusOut
+  , onPaste
   , onPointerCancel
   , onPointerDown
   , onPointerEnter
@@ -43,28 +47,24 @@ module Halogen.HTML.Events
   , onPointerOut
   , onPointerOver
   , onPointerUp
-  , onGotPointerCapture
-  , onLostPointerCapture
-  , onDrag
-  , onDragEnd
-  , onDragExit
-  , onDragEnter
-  , onDragLeave
-  , onDragOver
-  , onDragStart
-  , onDrop
+  , onReset
+  , onResize
+  , onScroll
+  , onSelect
+  , onSelectedIndexChange
+  , onSubmit
   , onTouchCancel
   , onTouchEnd
   , onTouchEnter
   , onTouchLeave
   , onTouchMove
   , onTouchStart
-  , onResize
+  , onTransitionEnd
   , onValueChange
   , onValueInput
-  , onSelectedIndexChange
-  , onChecked
-  ) where
+  , onWheel
+  )
+  where
 
 import Prelude
 
@@ -72,6 +72,7 @@ import Control.Monad.Except (runExcept)
 import Data.Either (either)
 import Data.Maybe (Maybe(..), maybe)
 import Data.Unfoldable (class Unfoldable, none)
+import Effect.Unsafe (unsafePerformEffect)
 import Foreign (F, Foreign, readBoolean, readInt, readString, unsafeToForeign)
 import Foreign.Index (readProp)
 import Halogen.HTML.Core (Prop)
@@ -90,6 +91,8 @@ import Web.HTML.Event.DragEvent (DragEvent)
 import Web.HTML.Event.DragEvent.EventTypes as DET
 import Web.HTML.Event.EventTypes as ET
 import Web.HTML.HTMLInputElement as HTMLInputElement
+import Web.PointerEvent (PointerEvent)
+import Web.PointerEvent.EventTypes as PET
 import Web.TouchEvent.TouchEvent (TouchEvent)
 import Web.UIEvent.FocusEvent (FocusEvent)
 import Web.UIEvent.FocusEvent.EventTypes as FET
@@ -98,11 +101,8 @@ import Web.UIEvent.KeyboardEvent (KeyboardEvent)
 import Web.UIEvent.KeyboardEvent.EventTypes as KET
 import Web.UIEvent.MouseEvent (MouseEvent)
 import Web.UIEvent.MouseEvent.EventTypes as MET
-import Web.PointerEvent (PointerEvent)
-import Web.PointerEvent.EventTypes as PET
 import Web.UIEvent.WheelEvent (WheelEvent)
 import Web.UIEvent.WheelEvent.EventTypes as WET
-import Effect.Unsafe (unsafePerformEffect)
 
 handler :: forall r i. EventType -> (Event -> i) -> IProp r i
 handler et f =
@@ -164,6 +164,9 @@ onTransitionEnd = handler (EventType "transitionend")
 
 onInput :: forall r i. (InputEvent -> i) -> IProp (onInput :: InputEvent | r) i
 onInput = handler ET.input <<< inputHandler
+
+onBeforeInput :: forall r i. (InputEvent -> i) -> IProp (onBeforeInput :: InputEvent | r) i
+onBeforeInput = handler (EventType "beforeinput") <<< inputHandler
 
 onCopy :: forall r i. (ClipboardEvent -> i) -> IProp (onCopy :: ClipboardEvent | r) i
 onCopy = handler CET.copy <<< clipboardHandler
