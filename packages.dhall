@@ -4,7 +4,7 @@ let upstream =
 
 in  upstream
   with dom-indexed =
-    { repo = "https://github.com/purescript-halogen/purescript-dom-indexed.git"
-    , version = "v11.0.0"
+    { repo = "https://github.com/kobijones111529/purescript-dom-indexed.git"
+    , version = "c3dbea9"
     , dependencies = upstream.dom-indexed.dependencies
     }
