@@ -93,6 +93,7 @@ import Web.HTML.HTMLInputElement as HTMLInputElement
 import Web.TouchEvent.TouchEvent (TouchEvent)
 import Web.UIEvent.FocusEvent (FocusEvent)
 import Web.UIEvent.FocusEvent.EventTypes as FET
+import Web.UIEvent.InputEvent (InputEvent)
 import Web.UIEvent.KeyboardEvent (KeyboardEvent)
 import Web.UIEvent.KeyboardEvent.EventTypes as KET
 import Web.UIEvent.MouseEvent (MouseEvent)
@@ -146,9 +147,6 @@ onFileUpload f = handler ET.change $
     >>> maybe none items
     >>> f
 
-onInput :: forall r i. (Event -> i) -> IProp (onInput :: Event | r) i
-onInput = handler ET.input
-
 onInvalid :: forall r i. (Event -> i) -> IProp (onInvalid :: Event | r) i
 onInvalid = handler ET.invalid
 
@@ -163,6 +161,9 @@ onSubmit = handler (EventType "submit")
 
 onTransitionEnd :: forall r i. (Event -> i) -> IProp (onTransitionEnd :: Event | r) i
 onTransitionEnd = handler (EventType "transitionend")
+
+onInput :: forall r i. (InputEvent -> i) -> IProp (onInput :: InputEvent | r) i
+onInput = handler ET.input <<< inputHandler
 
 onCopy :: forall r i. (ClipboardEvent -> i) -> IProp (onCopy :: ClipboardEvent | r) i
 onCopy = handler CET.copy <<< clipboardHandler
@@ -304,6 +305,9 @@ onTouchStart = handler (EventType "touchstart") <<< touchHandler
 
 onResize :: forall r i. (Event -> i) -> IProp (onResize :: Event | r) i
 onResize = handler (EventType "resize")
+
+inputHandler :: forall i. (InputEvent -> i) -> Event -> i
+inputHandler = unsafeCoerce
 
 keyHandler :: forall i. (KeyboardEvent -> i) -> Event -> i
 keyHandler = unsafeCoerce
