@@ -355,7 +355,7 @@ onSelectedIndexChange :: forall r i. (Int -> i) -> IProp (selectedIndex :: Int, 
 onSelectedIndexChange = addForeignPropHandler ET.change "selectedIndex" readInt
 
 -- | Attaches an event handler which will fire on input.
-onValueInput :: forall r i. (String -> i) -> IProp (value :: String, onInput :: Event | r) i
+onValueInput :: forall r i. (String -> i) -> IProp (value :: String, onInput :: InputEvent | r) i
 onValueInput = addForeignPropHandler ET.input "value" readString
 
 -- | Attaches an event handler which will fire when a checkbox is checked or
